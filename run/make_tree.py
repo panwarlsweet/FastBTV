@@ -25,7 +25,8 @@ options.setDefault('maxEvents', -1)
 
 options.parseArguments()
 
-process = cms.Process("USER")
+from Configuration.StandardSequences.Eras import eras
+process = cms.Process("USER", eras.Run2_2018)
 
 
 process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff")
