@@ -90,6 +90,10 @@ updateJetCollection(
     btagDiscriminators = bTagDiscriminators
 )
 
+#update training
+process.pfDeepFlavourJetTags.graph_path = cms.FileInPath('RecoBTag/Combined/data/DeepFlavourV03_10X_training/constant_graph.pb')
+process.pfDeepFlavourJetTags.lp_names = cms.vstring('cpf_input_batchnorm/keras_learning_phase')
+
 ## Initialize analyzer
 process.bTaggingExerciseIIAK4Jets = cms.EDAnalyzer(
     'FastBTV',
