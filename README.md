@@ -10,9 +10,6 @@ git cms-init
 #Get the latest DeepFlavour training
 git cms-addpkg RecoBTag/Combined
 git clone https://github.com/cms-data/RecoBTag-Combined.git data
-git cms-addpkg RecoBTag/DeepFlavour
-wget https://raw.githubusercontent.com/emilbols/cmssw/b62675266e3129ca3f77a62f2d7b29a8546d6f84/RecoBTag/TensorFlow/plugins/DeepFlavourTFJetTagsProducer.cc
-mv DeepFlavourTFJetTagsProducer.cc RecoBTag/DeepFlavour/plugins/.
 
 git clone git@github.com:mverzett/FastBTV.git FastBTV/FastBTV
 scram b
