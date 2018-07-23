@@ -9,7 +9,7 @@ cmsenv
 git cms-init
 #Get the latest DeepFlavour training
 git cms-addpkg RecoBTag/Combined
-git clone https://github.com/cms-data/RecoBTag-Combined.git data
+git clone https://github.com/cms-data/RecoBTag-Combined.git RecoBTag/Combined/data
 
 git clone git@github.com:mverzett/FastBTV.git FastBTV/FastBTV
 scram b
