@@ -33,7 +33,7 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '101X_upgrade2018_realistic_HEmiss_v1')
+process.GlobalTag = GlobalTag(process.GlobalTag, '103X_mc2017_realistic_v2')
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
@@ -44,14 +44,17 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source(
     "PoolSource",
-    fileNames = cms.untracked.vstring(options.inputFiles)
+    fileNames = cms.untracked.vstring()
+)
+process.source.fileNames.append(
+'root://cms-xrd-global.cern.ch//store/relval/CMSSW_10_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_103X_mc2017_realistic_v2_HS_ref-v1/20000/D21A48D6-4203-AE42-AFEF-38057284BCC6.root'
 )
 
 
 ## Output file
 process.TFileService = cms.Service(
     "TFileService",
-    fileName = cms.string(options.outputFile)
+    fileName = cms.string("out_tree_qcd.root")
 )
 
 ## Options and Output Report
