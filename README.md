@@ -18,13 +18,13 @@ scram b
 ## Usage
 ### Step 1 - make trees
 ```
-./make_tree.py inputFiles=FILE/TO/RUN.root outputFile=OUTPUT.root
+./make_tree.py
 ```
 **Warning!** The discriminators run, as well as the era, are hardcoded (at least for now).
 
 ### Step 2 - make the ROCs
 ```
-./make_rocs.py TREE_FILE.root OUTPUT_DIRECTORY [--bootstrap, to compute ROC uncertainties]
+./make_rocs.py OUTPUT_DIRECTORY [--bootstrap, to compute ROC uncertainties]
 ```
 **Warning!** The discriminators plotted and the selection are hardcoded. This is specific decision as this 
 package is intended for quick checks in specific topologies, rather then systematic studies. For those, please use
