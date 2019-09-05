@@ -33,7 +33,7 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mcRun3_2023_realistic_v3')
+process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mcRun3_2021_realistic_v3')
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
@@ -44,7 +44,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source(
     "PoolSource",
-    fileNames = cms.untracked.vstring("")
+    fileNames = cms.untracked.vstring("/store/mc/Run3Summer19MiniAOD/QCD_Pt_1800to2400_TuneCP5_14TeV_pythia8/MINIAODSIM/106X_mcRun3_2021_realistic_v3-v2/50000/8B796B26-13E2-C543-BECB-14507302F836.root","/store/mc/Run3Summer19MiniAOD/QCD_Pt_1800to2400_TuneCP5_14TeV_pythia8/MINIAODSIM/106X_mcRun3_2021_realistic_v3-v2/50000/D784A5D0-83CD-ED4D-9E2D-28DDEE2D904E.root")
 )
 
 

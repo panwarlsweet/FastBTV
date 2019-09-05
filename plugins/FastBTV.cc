@@ -21,7 +21,7 @@
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
-
+#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -57,6 +57,7 @@ private:
 	typedef std::vector<std::string> vstring;
   // ----------member data ---------------------------
   const edm::EDGetTokenT<std::vector<pat::Jet> > jets_;
+  const edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puInfo_;
 
   edm::Service<TFileService> fs;
 	TTree *tree_;
@@ -68,6 +69,7 @@ private:
 	float jet_pt = -1;
 	float jet_eta = -1;
 	float jet_phi = -1;
+        unsigned int pu = 0;
 
   // declare a map of b-tag discriminator histograms
   std::map<std::string, vstring> bdisc_names_;
@@ -75,7 +77,8 @@ private:
 };
 
 FastBTV::FastBTV(const edm::ParameterSet& iConfig) :
-  jets_(consumes<std::vector<pat::Jet> >(iConfig.getParameter<edm::InputTag>("jets")))
+  jets_(consumes<std::vector<pat::Jet> >(iConfig.getParameter<edm::InputTag>("jets"))),
+  puInfo_(consumes<std::vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("puInfo")))
 {
 	tree_ = fs->make<TTree>("tree", "tree");
 	tree_->Branch("run" , &run, "run/i");
@@ -85,7 +88,7 @@ FastBTV::FastBTV(const edm::ParameterSet& iConfig) :
 	tree_->Branch("jet_pt", &jet_pt , "jet_pt/f");
 	tree_->Branch("jet_eta", &jet_eta, "jet_eta/f");
 	tree_->Branch("jet_phi", &jet_phi, "jet_phi/f");
-
+	tree_->Branch("pu", &pu, "pu/i");
 	const edm::ParameterSet bdiscs = iConfig.getParameter<edm::ParameterSet>("bDiscriminators");	
 	for(auto &name : bdiscs.getParameterNames()) {
 		vstring vals = bdiscs.getParameter<vstring>(name);
@@ -116,12 +119,20 @@ FastBTV::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   // define a jet handle
   edm::Handle<std::vector<pat::Jet> > jets;
+  edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   // get jets from the event
   iEvent.getByToken(jets_, jets);
+  iEvent.getByToken(puInfo_,puInfo);
 
 	run  = iEvent.id().run();
 	lumi = iEvent.id().luminosityBlock();
-  evt  = iEvent.id().event();
+	evt  = iEvent.id().event();
+	for( auto & frame : *puInfo ) {
+	  if( frame.getBunchCrossing() == 0 ) {
+	        pu = frame.getTrueNumInteractions();
+	        break;
+	       }
+	     }
   // loop over jets
   for(auto& jet : *jets) {
 		flavour = std::abs( jet.hadronFlavour() );

@@ -41,44 +41,43 @@ def bootstrapped_roc(true, pred, n_boots=200):
       tprs[iboot] = spline(newx)
    return newx, tprs.mean(axis=1), tprs.std(axis=1)
 
-root=['HS_ref','HS_305406_rsb','HS_304778','HS_304169']
-
+root=['TT_Run3_2021', 'TT_Run3_2023', 'TT_Run3_2024', "TT_Run2_2018"]
+#root=["QCD_Run3_2024", "QCD_Run3_2024_w", "QCD_Run3_2024"]
 data0 = pd.DataFrame(
    root_numpy.root2array(
       #args.infile,
-      root[0]+'-v1.root',
+      root[0]+'.root',
       #'TTBar_RelVal.root', #'TTBar.root', 
       'bTaggingExerciseIIAK4Jets/tree')
    )
-data0 = data0[(data0.jet_pt > 30) & (np.abs(data0.jet_eta) < 2.5)]
+data0 = data0[(data0.jet_pt > 100) & (np.abs(data0.jet_eta) <= 2.5) ]
 
 data1 = pd.DataFrame(
    root_numpy.root2array(
       #args.infile,
-      root[1]+'-v1.root',
+      root[1]+'.root',
       #'TTBar_RelVal.root', #'TTBar.root',
       'bTaggingExerciseIIAK4Jets/tree')
    )
-data1 = data1[(data1.jet_pt > 30) & (np.abs(data1.jet_eta) < 2.5)]
+data1 = data1[(data1.jet_pt > 100) & (np.abs(data1.jet_eta) <= 2.5) ]
 
 data2 = pd.DataFrame(
    root_numpy.root2array(
       #args.infile,
-      root[2]+'-v1.root',
+      root[2]+'.root',
       #'TTBar_RelVal.root', #'TTBar.root',
       'bTaggingExerciseIIAK4Jets/tree')
    )
-data2 = data2[(data2.jet_pt > 30) & (np.abs(data2.jet_eta) < 2.5)]
-
+data2 = data2[(data2.jet_pt > 100) & (np.abs(data2.jet_eta) <= 2.5) ]
 
 data3 = pd.DataFrame(
    root_numpy.root2array(
       #args.infile,
-      root[3]+'-v1.root',
+      root[3]+'.root',
       #'TTBar_RelVal.root', #'TTBar.root',
       'bTaggingExerciseIIAK4Jets/tree')
    )
-data3 = data3[(data3.jet_pt > 30) & (np.abs(data3.jet_eta) < 2.5)]
+data3 = data3[(data3.jet_pt > 100) & (np.abs(data3.jet_eta) <= 2.5)]
 
 """HEM_15_16 = data[(data.jet_eta < -1.5) & \
                     (data.jet_eta > -2.5) & \
@@ -119,10 +118,11 @@ for what, bkg in [('BvsL', 0), ('BvsC', 4)]:
    plt.clf()
 """
 data=data0
-discr= ['CSVv2', 'DeepCSV', 'DeepFlavour']
-for i in range(0,3):
+discr= ['DeepFlavour']
+#count=0
+for i in range(0,1):
  count=0
- for disc, color in [(discr[i], 'r'), (discr[i], 'g'), (discr[i], 'b'),(discr[i], 'y')]:
+ for disc, color in [(discr[i], 'r'), (discr[i], 'g'), (discr[i], 'b'), (discr[i], 'k')]:
    disc_mask = np.ones(data.shape[0]).astype(bool) #(data[disc] >= 0)
    print disc
    count=count+1
@@ -150,8 +150,8 @@ for i in range(0,3):
    if count==2: data=data2
    if count==3: data=data3
  plt.ylabel('Mistag Rate')
- plt.xlabel('Efficiency')
- plt.title('RelValTTbar_13_%s' %(discr[i]))
+ plt.xlabel('b-efficiency')
+ plt.title('TTJets_%s jets: pT > 100 GeV |eta| <= 2.5 pu ' %(discr[i]))
  plt.legend(loc='best') 
  plt.ylim(5e-4, 1)
  plt.gca().set_yscale('log')

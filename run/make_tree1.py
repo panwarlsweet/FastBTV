@@ -9,7 +9,7 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 
 options = VarParsing ('python')
 
-options.register('reportEvery', 10,
+options.register('reportEvery', 100,
     VarParsing.multiplicity.singleton,
     VarParsing.varType.int,
     "Report every N events (default is N=10)"
@@ -26,14 +26,14 @@ options.setDefault('maxEvents', -1)
 options.parseArguments()
 
 from Configuration.StandardSequences.Eras import eras
-process = cms.Process("USER", eras.Run2_2018)
+process = cms.Process("USER", eras.Run3)
 
 
 process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff")
 process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '103X_mc2017_realistic_v2')
+process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mcRun3_2024_realistic_v4')
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
@@ -44,17 +44,14 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source(
     "PoolSource",
-    fileNames = cms.untracked.vstring()
-)
-process.source.fileNames.append(
-'root://cms-xrd-global.cern.ch//store/relval/CMSSW_10_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_103X_mc2017_realistic_v2_HS_ref-v1/20000/D21A48D6-4203-AE42-AFEF-38057284BCC6.root'
+    fileNames = cms.untracked.vstring("")
 )
 
 
 ## Output file
 process.TFileService = cms.Service(
     "TFileService",
-    fileName = cms.string("out_tree_TTBar.root")
+    fileName = cms.string("QCD_Run3.root")
 )
 
 ## Options and Output Report
@@ -86,21 +83,22 @@ bTagDiscriminators = [
 ]
 
 from PhysicsTools.PatAlgos.tools.jetTools import *
-updateJetCollection(
+"""updateJetCollection(
     process,
     jetSource = cms.InputTag('slimmedJets'),
     jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
     btagDiscriminators = bTagDiscriminators
-)
+)"""
 
 #update training
-process.pfDeepFlavourJetTags.graph_path = cms.FileInPath('RecoBTag/Combined/data/DeepFlavourV03_10X_training/constant_graph.pb')
-process.pfDeepFlavourJetTags.lp_names = cms.vstring('cpf_input_batchnorm/keras_learning_phase')
+#process.pfDeepFlavourJetTags.graph_path = cms.FileInPath('RecoBTag/Combined/data/DeepFlavourV03_10X_training/constant_graph.pb')
+#process.pfDeepFlavourJetTags.lp_names = cms.vstring('cpf_input_batchnorm/keras_learning_phase')
 
 ## Initialize analyzer
 process.bTaggingExerciseIIAK4Jets = cms.EDAnalyzer(
     'FastBTV',
-    jets = cms.InputTag('selectedUpdatedPatJets'), # input jet collection name
+    jets = cms.InputTag('slimmedJets'), # input jet collection name
+    puInfo=cms.InputTag("slimmedAddPileupInfo"),
     bDiscriminators = cms.PSet(
         CSVv2 = cms.vstring('pfCombinedInclusiveSecondaryVertexV2BJetTags'),
         DeepCSV = cms.vstring(
